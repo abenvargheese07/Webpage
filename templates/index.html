@@ -800,6 +800,7 @@
     const NUMBERED_LINE_RE = /^\s*(\d+)\s*[-.):\u0964]\s*/;
 
     function parseBulkText(text) {
+      const DEFAULT_TITLE = 'प्रार्थना  विषय';
       const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
       if (lines.length === 0) return { title: '', points: [] };
 
@@ -820,6 +821,11 @@
         }
       }
 
+      // If no heading was found (all lines were numbered), use the default
+      if (!title && points.length > 0) {
+        title = DEFAULT_TITLE;
+      }
+
       return { title, points };
     }
 
@@ -830,9 +836,18 @@
         return;
       }
       bulkParsedInfo.style.display = 'block';
+
+      // Check if the user provided their own heading (any non-numbered line)
+      const rawLines = bulkTextarea.value.split('\n').map(l => l.trim()).filter(Boolean);
+      const hasUserHeading = rawLines.some(l => !l.match(NUMBERED_LINE_RE));
+
       if (title && points.length > 0) {
         parsedBadge.className = 'parsed-badge';
-        parsedBadge.textContent = `✓ Parsed: "${title}" + ${points.length} point${points.length > 1 ? 's' : ''}`;
+        if (hasUserHeading) {
+          parsedBadge.textContent = `✓ Parsed: "${title}" + ${points.length} point${points.length > 1 ? 's' : ''}`;
+        } else {
+          parsedBadge.textContent = `✓ Auto-heading: "${title}" + ${points.length} point${points.length > 1 ? 's' : ''}`;
+        }
       } else if (!title) {
         parsedBadge.className = 'parsed-badge has-error';
         parsedBadge.textContent = '⚠ No title detected — add a non-numbered line at the top';
