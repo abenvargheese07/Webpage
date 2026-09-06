@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-generate_tiled_pdf.py
+pdf/cli.py – Standalone CLI tool for generating tiled prayer-card PDFs.
 
 Takes a title + a list of text lines (e.g. prayer topics, notice points, etc.)
 from the user and produces a print-ready A4 landscape PDF with 6 identical
@@ -15,20 +15,20 @@ REQUIREMENTS (install once):
 USAGE
 
   1) Interactive (just run it and follow the prompts):
-       python3 generate_tiled_pdf.py
+       python3 -m pdf.cli
 
   2) From a text file (first line = title, remaining lines = points):
-       python3 generate_tiled_pdf.py --input points.txt --output out.pdf
+       python3 -m pdf.cli --input data/sample_points.txt --output out.pdf
 
   3) Fully via command line:
-       python3 generate_tiled_pdf.py \
+       python3 -m pdf.cli \
            --title "प्रार्थना विषय" \
            --line "देश की उन्नति के लिए प्रार्थना करें" \
            --line "जवान पीढ़ी को रोजगार मिलने पाये" \
            --output out.pdf
 
   4) Change grid / orientation / font:
-       python3 generate_tiled_pdf.py --input points.txt --cols 2 --rows 3 \
+       python3 -m pdf.cli --input data/sample_points.txt --cols 2 --rows 3 \
            --orientation portrait --font /path/to/YourFont-Bold.ttf
 
 Points don't need to be pre-numbered -- the script numbers them "1- ", "2- ",
@@ -47,8 +47,9 @@ import tempfile
 # Defaults
 # ---------------------------------------------------------------------------
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_FONT = os.path.join(SCRIPT_DIR, "NotoSansDevanagari-Bold.ttf")
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEFAULT_FONT = os.path.join(PROJECT_ROOT, "static", "fonts",
+                            "NotoSansDevanagari-Bold.ttf")
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="hi">
@@ -105,7 +106,7 @@ def build_card_html(title, lines):
         if not line:
             continue
         # If the line doesn't already start with "1-", "1.", "1)" etc, number it.
-        if re.match(r"^\d+[-.)]\s*", line):
+        if re.match(r"^\d+[-.)\s*", line):
             numbered.append(line)
         else:
             numbered.append(f"{i}- {line}")
@@ -185,7 +186,7 @@ def generate(title, lines, output_path, cols=3, rows=2, font_path=DEFAULT_FONT,
     if not os.path.isfile(font_path):
         raise FileNotFoundError(
             f"Font not found at {font_path}. Pass --font /path/to/font.ttf "
-            f"or place NotoSansDevanagari-Bold.ttf next to this script."
+            f"or place NotoSansDevanagari-Bold.ttf in static/fonts/."
         )
 
     title_size = start_title_size

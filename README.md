@@ -6,32 +6,58 @@ Text is bold, centered, and auto-sized to fill each tile as much as
 possible without spilling onto a second page — same style as the
 "प्रार्थना विषय" card.
 
+## Project Structure
+
+```
+├── app.py                  # Flask web app entry point
+├── pdf/                    # PDF generation module
+│   ├── __init__.py
+│   ├── generator.py        # Web PDF logic (fpdf2 + HarfBuzz)
+│   └── cli.py              # Standalone CLI generator (wkhtmltopdf)
+├── static/fonts/           # Font assets
+│   └── NotoSansDevanagari-Bold.ttf
+├── templates/              # Jinja2 HTML templates
+│   └── index.html
+├── data/                   # Sample data files
+│   └── sample_points.txt
+├── requirements.txt
+├── Procfile
+└── README.md
+```
+
 ## Setup (one-time)
 
 ```bash
-sudo apt-get install -y wkhtmltopdf poppler-utils
-pip install --break-system-packages -r requirements.txt   # (no extra deps needed, stdlib only)
+sudo apt-get install -y wkhtmltopdf poppler-utils   # CLI generator only
+pip3 install --break-system-packages -r requirements.txt
 ```
 
-Keep `NotoSansDevanagari-Bold.ttf` in the same folder as the script (already
-included here) — it supports Hindi/Devanagari text. For other scripts/languages,
-pass your own bold font with `--font`.
+The font `NotoSansDevanagari-Bold.ttf` lives in `static/fonts/` and supports
+Hindi/Devanagari text. For other scripts/languages, pass your own bold font
+with `--font`.
 
-## Usage
+## Web App
+
+```bash
+python3 app.py
+# → open http://localhost:8080
+```
+
+## CLI Usage
 
 **1. Interactive** — just run it and answer the prompts:
 ```bash
-python3 generate_tiled_pdf.py
+python3 -m pdf.cli
 ```
 
 **2. From a text file** — first line is the title, every line after is a point:
 ```bash
-python3 generate_tiled_pdf.py --input sample_points.txt --output out.pdf
+python3 -m pdf.cli --input data/sample_points.txt --output out.pdf
 ```
 
 **3. Fully via command line:**
 ```bash
-python3 generate_tiled_pdf.py \
+python3 -m pdf.cli \
   --title "प्रार्थना विषय" \
   --line "देश की उन्नति के लिए प्रार्थना करें" \
   --line "जवान पीढ़ी को रोजगार मिलने पाये" \
