@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Generate print-ready tiled prayer cards (प्रार्थना विषय) as PDF — enter title and points, download instantly.">
+    content="Generate print-ready tiled prayer cards as PDF — enter title and points, download instantly.">
   <title>Prayr</title>
 
   <!-- Fonts -->
@@ -16,29 +16,30 @@
     rel="stylesheet">
 
   <style>
-    /* ===== Design Tokens — Warm Amber/Gold Church Theme ===== */
+    /* ===== Design Tokens — Dark Purple Theme ===== */
     :root {
-      --bg-deep: #0f0d0a;
-      --bg-surface: rgba(255, 235, 200, 0.04);
-      --bg-glass: rgba(255, 235, 200, 0.06);
-      --bg-glass-hover: rgba(255, 235, 200, 0.10);
-      --border-glass: rgba(255, 210, 140, 0.12);
-      --border-focus: #d97706;
-      --text-primary: #fef3e2;
-      --text-secondary: #c8a97e;
-      --text-muted: #8a7560;
-      --accent: #f59e0b;
-      --accent-bright: #fbbf24;
-      --accent-glow: rgba(245, 158, 11, 0.30);
+      --bg-deep: #050510;
+      --bg-surface: rgba(120, 80, 255, 0.04);
+      --bg-glass: rgba(120, 80, 255, 0.05);
+      --bg-glass-hover: rgba(120, 80, 255, 0.08);
+      --border-glass: rgba(120, 80, 255, 0.15);
+      --border-focus: #7c3aed;
+      --text-primary: #f0eef6;
+      --text-secondary: #a09bb8;
+      --text-muted: #6b6580;
+      --accent: #7c3aed;
+      --accent-bright: #a78bfa;
+      --accent-glow: rgba(124, 58, 237, 0.30);
       --danger: #ef4444;
       --success: #22c55e;
-      --gradient-hero: linear-gradient(135deg, #d97706 0%, #f59e0b 40%, #fbbf24 100%);
+      --gradient-hero: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+      --gradient-btn: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
       --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.5);
-      --shadow-glow: 0 0 60px rgba(245, 158, 11, 0.12);
-      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+      --shadow-glow: 0 0 80px rgba(124, 58, 237, 0.15);
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       color-scheme: dark;
     }
 
@@ -68,10 +69,12 @@
     body::before {
       content: '';
       position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 600px 400px at 20% 10%, rgba(217, 119, 6, 0.12) 0%, transparent 70%),
-        radial-gradient(ellipse 500px 500px at 80% 80%, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+      top: -40%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, rgba(124, 58, 237, 0.04) 40%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -80,94 +83,75 @@
     .page-wrapper {
       position: relative;
       z-index: 1;
-      max-width: 720px;
+      max-width: 680px;
       margin: 0 auto;
-      padding: 2rem 1.25rem 4rem;
+      padding: 2.5rem 1.25rem 4rem;
     }
 
     /* ===== Header ===== */
     .hero {
       text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .hero-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 64px;
-      height: 64px;
-      border-radius: 18px;
-      background: var(--gradient-hero);
-      font-size: 1.75rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 8px 30px rgba(217, 119, 6, 0.35);
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-6px);
-      }
+      margin-bottom: 3rem;
+      padding-top: 1rem;
     }
 
     .hero h1 {
-      font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
-      font-size: 2rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 2.5rem;
       font-weight: 800;
       background: var(--gradient-hero);
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      line-height: 1.3;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
     }
 
     .hero p {
       color: var(--text-secondary);
-      margin-top: 0.5rem;
-      font-size: 0.95rem;
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      font-weight: 400;
     }
 
     /* ===== Glass Card ===== */
     .card {
       background: var(--bg-glass);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border-glass);
       border-radius: var(--radius-lg);
-      padding: 2rem;
-      margin-bottom: 1.5rem;
+      padding: 1.75rem;
+      margin-bottom: 1.25rem;
       box-shadow: var(--shadow-card);
       transition: border-color var(--transition);
     }
 
     .card:hover {
-      border-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(124, 58, 237, 0.25);
     }
 
     .card-title {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       color: var(--accent-bright);
       margin-bottom: 1.25rem;
     }
 
     /* ===== Form Fields ===== */
     .field {
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
     }
 
     label {
       display: block;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 500;
       color: var(--text-secondary);
       margin-bottom: 0.4rem;
@@ -177,11 +161,11 @@
     textarea,
     select {
       width: 100%;
-      padding: 0.7rem 0.9rem;
+      padding: 0.65rem 0.85rem;
       font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: var(--text-primary);
-      background: var(--bg-surface);
+      background: rgba(0, 0, 0, 0.3);
       border: 1px solid var(--border-glass);
       border-radius: var(--radius-sm);
       outline: none;
@@ -191,20 +175,14 @@
     input[type="text"]:focus,
     textarea:focus,
     select:focus {
-      border-color: var(--border-focus);
+      border-color: var(--accent);
       box-shadow: 0 0 0 3px var(--accent-glow);
-    }
-
-    input[type="text"]:focus-visible,
-    textarea:focus-visible,
-    select:focus-visible {
-      outline: 3px solid var(--border-focus);
-      outline-offset: 2px;
     }
 
     textarea {
       resize: vertical;
       min-height: 48px;
+      line-height: 1.7;
     }
 
     select {
@@ -221,20 +199,20 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
+      gap: 0.6rem;
     }
 
     .point-item {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      animation: slideIn 0.3s ease-out;
+      animation: slideIn 0.25s ease-out;
     }
 
     @keyframes slideIn {
       from {
         opacity: 0;
-        transform: translateY(-8px);
+        transform: translateY(-6px);
       }
 
       to {
@@ -245,15 +223,15 @@
 
     .point-number {
       flex-shrink: 0;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      background: rgba(245, 158, 11, 0.15);
+      background: rgba(124, 58, 237, 0.15);
       color: var(--accent-bright);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
     }
 
@@ -263,54 +241,60 @@
 
     .btn-remove {
       flex-shrink: 0;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
       border: none;
       border-radius: 50%;
-      background: rgba(248, 113, 113, 0.1);
+      background: rgba(239, 68, 68, 0.08);
       color: var(--danger);
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       transition: background var(--transition), transform var(--transition);
     }
 
     .btn-remove:hover {
-      background: rgba(248, 113, 113, 0.25);
+      background: rgba(239, 68, 68, 0.2);
       transform: scale(1.1);
     }
 
     .btn-add {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
       margin-top: 0.5rem;
-      padding: 0.5rem 1rem;
+      padding: 0.45rem 0.9rem;
       border: 1px dashed var(--border-glass);
       border-radius: var(--radius-sm);
       background: transparent;
       color: var(--accent-bright);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 500;
       cursor: pointer;
       transition: background var(--transition), border-color var(--transition);
     }
 
     .btn-add:hover {
-      background: rgba(245, 158, 11, 0.08);
+      background: rgba(124, 58, 237, 0.08);
       border-color: var(--accent);
     }
 
     /* ===== Settings Grid ===== */
     .settings-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 1rem;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 560px) {
+      .settings-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 380px) {
       .settings-grid {
         grid-template-columns: 1fr;
       }
@@ -321,20 +305,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
       width: 100%;
-      padding: 1rem;
+      padding: 0.85rem;
       border: none;
       border-radius: var(--radius-md);
-      background: var(--gradient-hero);
+      background: var(--gradient-btn);
       color: #fff;
       font-family: 'Inter', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
       transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
-      box-shadow: 0 4px 20px rgba(217, 119, 6, 0.35);
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
       position: relative;
       overflow: hidden;
     }
@@ -343,9 +326,9 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
       transform: translateX(-100%);
-      transition: transform 0.6s;
+      transition: transform 0.5s;
     }
 
     .btn-generate:hover::before {
@@ -353,8 +336,8 @@
     }
 
     .btn-generate:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(217, 119, 6, 0.45);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 28px rgba(124, 58, 237, 0.4);
     }
 
     .btn-generate:active {
@@ -362,26 +345,29 @@
     }
 
     .btn-generate:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
       transform: none;
     }
 
-    .btn-generate .spinner {
+    .btn-generate .spinner,
+    .btn-preview .spinner {
       display: none;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
       border-top-color: #fff;
       border-radius: 50%;
-      animation: spin 0.7s linear infinite;
+      animation: spin 0.6s linear infinite;
     }
 
-    .btn-generate.loading .spinner {
+    .btn-generate.loading .spinner,
+    .btn-preview.loading .spinner {
       display: block;
     }
 
-    .btn-generate.loading .btn-label {
+    .btn-generate.loading .btn-label,
+    .btn-preview.loading .btn-label {
       display: none;
     }
 
@@ -397,14 +383,14 @@
       bottom: 2rem;
       left: 50%;
       transform: translateX(-50%) translateY(120%);
-      padding: 0.75rem 1.5rem;
+      padding: 0.7rem 1.25rem;
       border-radius: var(--radius-sm);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 500;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
       z-index: 1000;
       opacity: 0;
-      transition: transform 0.35s ease, opacity 0.35s ease;
+      transition: transform 0.3s ease, opacity 0.3s ease;
       pointer-events: none;
     }
 
@@ -431,13 +417,13 @@
       border-radius: var(--radius-md);
       overflow: hidden;
       box-shadow: var(--shadow-card);
-      background: #1a1814;
+      background: rgba(0, 0, 0, 0.3);
       border: 1px solid var(--border-glass);
       transition: all var(--transition);
     }
 
     .pdf-preview-container.has-pdf {
-      border-color: rgba(245, 158, 11, 0.25);
+      border-color: rgba(124, 58, 237, 0.3);
     }
 
     .pdf-preview-placeholder {
@@ -445,20 +431,32 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.75rem;
-      padding: 3rem 1.5rem;
+      gap: 0.5rem;
+      padding: 2.5rem 1.5rem;
       color: var(--text-muted);
       text-align: center;
     }
 
     .pdf-preview-placeholder .placeholder-icon {
-      font-size: 2.5rem;
-      opacity: 0.4;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(124, 58, 237, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pdf-preview-placeholder .placeholder-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--text-muted);
+      fill: none;
+      stroke-width: 1.5;
     }
 
     .pdf-preview-placeholder p {
-      font-size: 0.85rem;
-      line-height: 1.5;
+      font-size: 0.82rem;
     }
 
     .pdf-preview-embed {
@@ -470,8 +468,8 @@
 
     .btn-row {
       display: flex;
-      gap: 0.75rem;
-      margin-top: 1rem;
+      gap: 0.65rem;
+      margin-top: 1.25rem;
     }
 
     .btn-row .btn-generate {
@@ -484,22 +482,22 @@
       justify-content: center;
       gap: 0.5rem;
       flex: 1;
-      padding: 1rem;
-      border: 2px solid var(--accent);
+      padding: 0.85rem;
+      border: 1px solid var(--border-glass);
       border-radius: var(--radius-md);
-      background: transparent;
+      background: rgba(124, 58, 237, 0.06);
       color: var(--accent-bright);
       font-family: 'Inter', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 700;
+      font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: transform var(--transition), background var(--transition), box-shadow var(--transition);
+      transition: transform var(--transition), background var(--transition), border-color var(--transition);
     }
 
     .btn-preview:hover {
-      background: rgba(245, 158, 11, 0.1);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 20px rgba(217, 119, 6, 0.2);
+      background: rgba(124, 58, 237, 0.12);
+      border-color: var(--accent);
+      transform: translateY(-1px);
     }
 
     .btn-preview:active {
@@ -513,28 +511,15 @@
     }
 
     .btn-preview .spinner {
-      display: none;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(245, 158, 11, 0.3);
+      border-color: rgba(167, 139, 250, 0.3);
       border-top-color: var(--accent-bright);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-
-    .btn-preview.loading .spinner {
-      display: block;
-    }
-
-    .btn-preview.loading .btn-label {
-      display: none;
     }
 
     /* ===== Input Mode Toggle ===== */
     .input-mode-toggle {
       display: flex;
-      gap: 4px;
-      background: rgba(0, 0, 0, 0.25);
+      gap: 2px;
+      background: rgba(0, 0, 0, 0.3);
       border-radius: 8px;
       padding: 3px;
     }
@@ -542,14 +527,14 @@
     .mode-btn {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
-      padding: 0.3rem 0.7rem;
+      gap: 0.25rem;
+      padding: 0.3rem 0.65rem;
       border: none;
       border-radius: 6px;
       background: transparent;
       color: var(--text-muted);
       font-family: 'Inter', sans-serif;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 600;
       cursor: pointer;
       transition: all var(--transition);
@@ -558,51 +543,73 @@
 
     .mode-btn:hover {
       color: var(--text-secondary);
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .mode-btn.active {
-      background: rgba(245, 158, 11, 0.18);
+      background: rgba(124, 58, 237, 0.2);
       color: var(--accent-bright);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
     }
 
     /* ===== Parsed Info Badge ===== */
     .bulk-parsed-info {
-      margin-top: 0.75rem;
-      animation: slideIn 0.3s ease-out;
+      margin-top: 0.65rem;
+      animation: slideIn 0.25s ease-out;
     }
 
     .parsed-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
+      gap: 0.4rem;
+      padding: 0.4rem 0.85rem;
       border-radius: var(--radius-sm);
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid rgba(34, 197, 94, 0.2);
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.15);
       color: var(--success);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 500;
     }
 
     .parsed-badge.has-error {
-      background: rgba(245, 158, 11, 0.1);
-      border-color: rgba(245, 158, 11, 0.2);
-      color: var(--accent-bright);
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+    }
+
+    /* ===== Range Inputs ===== */
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* ===== Number Inputs ===== */
+    input[type="number"] {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    input[type="number"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
     /* ===== Footer ===== */
     .footer {
       text-align: center;
-      margin-top: 2.5rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(124, 58, 237, 0.08);
       color: var(--text-muted);
-      font-size: 0.8rem;
-    }
-
-    .footer a {
-      color: var(--accent);
-      text-decoration: none;
+      font-size: 0.75rem;
     }
   </style>
 </head>
@@ -612,24 +619,22 @@
 
     <!-- Hero -->
     <header class="hero">
-      <div class="hero-icon"></div>
       <h1>Prayr</h1>
-      <p>Design & print beautiful prayer topic cards instantly</p>
+      <p>Generate print-ready prayer cards</p>
     </header>
 
     <!-- Content Card -->
     <section class="card" aria-label="Card content">
       <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
-        <span>📝 Content</span>
-        <!-- Input Mode Toggle -->
+        <span>Content</span>
         <div class="input-mode-toggle" id="input-mode-toggle">
           <button type="button" class="mode-btn active" data-mode="bulk" id="mode-bulk-btn"
             title="Paste all points at once">
-            <span style="font-size:0.85rem;">📋</span> Bulk Paste
+            Bulk Paste
           </button>
           <button type="button" class="mode-btn" data-mode="individual" id="mode-individual-btn"
             title="Add points one by one">
-            <span style="font-size:0.85rem;">✏️</span> Individual
+            Individual
           </button>
         </div>
       </div>
@@ -637,15 +642,13 @@
       <!-- ===== BULK INPUT MODE ===== -->
       <div id="bulk-mode" class="input-mode">
         <div class="field">
-          <label for="bulk-textarea">Paste all content (title + numbered points)</label>
-          <textarea id="bulk-textarea" rows="10" placeholder="Paste here — example:
-
-प्रार्थना विषय
+          <label for="bulk-textarea">Paste title + numbered points</label>
+          <textarea id="bulk-textarea" rows="10" placeholder="प्रार्थना विषय
 1- राज्यसभा व विधानसभा मे देश की उन्नति के लिए चर्चा होने पाये ।
 2- जवान पीढ़ी को रोजगार मिलने पाये ।
 3- ज्यादा बारिश के कारण जो राज्यो मे नुकसान हुआ है ।
 4- दिल्ली मे सड़को व ड्रेनेज मे सुधार होने पाये ।
-5- कलीसिया के जन परमेश्वर के वचन मे जड़ पकड़ना है ।" style="min-height:180px;line-height:1.7;"></textarea>
+5- कलीसिया के जन परमेश्वर के वचन मे जड़ पकड़ना है ।" style="min-height:180px;"></textarea>
         </div>
         <div class="bulk-parsed-info" id="bulk-parsed-info" style="display:none;">
           <span class="parsed-badge" id="parsed-badge"></span>
@@ -655,12 +658,12 @@
       <!-- ===== INDIVIDUAL INPUT MODE ===== -->
       <div id="individual-mode" class="input-mode" style="display:none;">
         <div class="field">
-          <label for="title-input">Title / शीर्षक</label>
-          <input type="text" id="title-input" name="title" placeholder="e.g. प्रार्थना विषय" autocomplete="off">
+          <label for="title-input">Title</label>
+          <input type="text" id="title-input" name="title" placeholder="प्रार्थना विषय" autocomplete="off">
         </div>
 
         <div class="field">
-          <label>Prayer Points / प्रार्थना बिंदु</label>
+          <label>Prayer Points</label>
           <ul class="points-list" id="points-list">
             <li class="point-item">
               <span class="point-number">1</span>
@@ -669,7 +672,7 @@
             </li>
           </ul>
           <button type="button" class="btn-add" id="btn-add-point">
-            <span>＋</span> Add point
+            + Add point
           </button>
         </div>
       </div>
@@ -677,16 +680,12 @@
 
     <!-- Settings Card -->
     <section class="card" aria-label="Page settings">
-      <div class="card-title">⚙️ Page Settings</div>
+      <div class="card-title">Settings</div>
       <div class="settings-grid">
         <div class="field">
-          <label for="tiles-input">Number of Tiles</label>
-          <input type="number" id="tiles-input" name="tiles" value="6" min="1" max="25"
-            style="width:100%;padding:0.7rem 0.9rem;font-family:'Inter',sans-serif;font-size:0.95rem;color:var(--text-primary);background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-sm);outline:none;transition:border-color var(--transition),box-shadow var(--transition);"
-            onfocus="this.style.borderColor='var(--border-focus)';this.style.boxShadow='0 0 0 3px var(--accent-glow)';"
-            onblur="this.style.borderColor='';this.style.boxShadow='';">
-          <span id="grid-info" style="display:block;margin-top:0.35rem;font-size:0.78rem;color:var(--text-muted);">Grid:
-            3 × 2 = 6 tiles</span>
+          <label for="tiles-input">Tiles</label>
+          <input type="number" id="tiles-input" name="tiles" value="6" min="1" max="25">
+          <span id="grid-info" style="display:block;margin-top:0.3rem;font-size:0.72rem;color:var(--text-muted);">3 × 2</span>
         </div>
         <div class="field">
           <label for="page-size-select">Page Size</label>
@@ -707,31 +706,36 @@
 
     <!-- Typography Card -->
     <section class="card" aria-label="Typography settings">
-      <div class="card-title">🔤 Typography</div>
+      <div class="card-title">Typography</div>
       <div class="field">
-        <label for="title-size-range">Title Size: <span id="title-size-val">36</span>px</label>
-        <input type="range" id="title-size-range" min="8" max="200" value="36"
-          style="width:100%;accent-color:var(--accent);cursor:pointer;">
+        <label for="title-size-range">Title Size — <span id="title-size-val">36</span>px</label>
+        <input type="range" id="title-size-range" min="8" max="200" value="36">
       </div>
       <div class="field">
-        <label for="body-size-range">Body Size: <span id="body-size-val">22</span>px</label>
-        <input type="range" id="body-size-range" min="6" max="150" value="22"
-          style="width:100%;accent-color:var(--accent);cursor:pointer;">
+        <label for="body-size-range">Body Size — <span id="body-size-val">22</span>px</label>
+        <input type="range" id="body-size-range" min="6" max="150" value="22">
       </div>
       <div class="field">
-        <label for="gap-range">Gap after Title: <span id="gap-val">14</span>px</label>
-        <input type="range" id="gap-range" min="0" max="100" value="14"
-          style="width:100%;accent-color:var(--accent);cursor:pointer;">
+        <label for="gap-range">Title Gap — <span id="gap-val">14</span>px</label>
+        <input type="range" id="gap-range" min="0" max="100" value="14">
       </div>
     </section>
 
     <!-- PDF Preview Card -->
     <section class="card" aria-label="PDF preview">
-      <div class="card-title">📄 PDF Preview</div>
+      <div class="card-title">Preview</div>
       <div class="pdf-preview-container" id="pdf-preview-container">
         <div class="pdf-preview-placeholder" id="pdf-preview-placeholder">
-          <div class="placeholder-icon">📄</div>
-          <p>Click <strong>Preview</strong> to see your generated PDF here</p>
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <p>Click <strong>Preview</strong> to see your PDF</p>
         </div>
       </div>
     </section>
@@ -740,11 +744,11 @@
     <div class="btn-row">
       <button type="button" class="btn-preview" id="btn-preview">
         <span class="spinner"></span>
-        <span class="btn-label">👁️ Preview PDF</span>
+        <span class="btn-label">Preview</span>
       </button>
       <button type="button" class="btn-generate" id="btn-generate">
         <span class="spinner"></span>
-        <span class="btn-label">⬇️ Download PDF</span>
+        <span class="btn-label">Download PDF</span>
       </button>
     </div>
 
@@ -752,7 +756,7 @@
     <div class="toast" id="toast" role="alert"></div>
 
     <footer class="footer">
-      Built with ❤️ for the Church
+      Prayr — Prayer Card Generator
     </footer>
   </div>
 
@@ -788,14 +792,6 @@
 
     /* ============================================================
        Bulk text parser
-       ============================================================
-       Accepts text like:
-         प्रार्थना विषय
-         1- First point text
-         2- Second point text
-         ...
-       Numbered patterns recognized: "1- ", "1. ", "1) ", "1: "
-       The first non-empty, non-numbered line is treated as the title.
        ============================================================ */
     const NUMBERED_LINE_RE = /^\s*(\d+)\s*[-.):\u0964]\s*/;
 
@@ -810,13 +806,10 @@
       for (const line of lines) {
         const m = line.match(NUMBERED_LINE_RE);
         if (m) {
-          // It's a numbered line — strip the number prefix and store
           points.push(line.replace(NUMBERED_LINE_RE, '').trim());
         } else if (!title) {
-          // First non-numbered line → title
           title = line;
         } else {
-          // Additional non-numbered line — treat as a point
           points.push(line);
         }
       }
@@ -837,23 +830,22 @@
       }
       bulkParsedInfo.style.display = 'block';
 
-      // Check if the user provided their own heading (any non-numbered line)
       const rawLines = bulkTextarea.value.split('\n').map(l => l.trim()).filter(Boolean);
       const hasUserHeading = rawLines.some(l => !l.match(NUMBERED_LINE_RE));
 
       if (title && points.length > 0) {
         parsedBadge.className = 'parsed-badge';
         if (hasUserHeading) {
-          parsedBadge.textContent = `✓ Parsed: "${title}" + ${points.length} point${points.length > 1 ? 's' : ''}`;
+          parsedBadge.textContent = `Parsed: "${title}" + ${points.length} point${points.length > 1 ? 's' : ''}`;
         } else {
-          parsedBadge.textContent = `✓ Auto-heading: "${title}" + ${points.length} point${points.length > 1 ? 's' : ''}`;
+          parsedBadge.textContent = `Auto-heading: "${title}" + ${points.length} point${points.length > 1 ? 's' : ''}`;
         }
       } else if (!title) {
         parsedBadge.className = 'parsed-badge has-error';
-        parsedBadge.textContent = '⚠ No title detected — add a non-numbered line at the top';
+        parsedBadge.textContent = 'No title detected — add a non-numbered line at the top';
       } else {
         parsedBadge.className = 'parsed-badge has-error';
-        parsedBadge.textContent = '⚠ No points detected — add numbered lines (e.g. 1- …)';
+        parsedBadge.textContent = 'No points detected — add numbered lines (e.g. 1- …)';
       }
     }
 
@@ -868,17 +860,13 @@
     function switchMode(mode) {
       currentMode = mode;
 
-      /* Toggle button states */
       modeBulkBtn.classList.toggle('active', mode === 'bulk');
       modeIndividualBtn.classList.toggle('active', mode === 'individual');
 
-      /* Toggle panel visibility */
       bulkModeDiv.style.display = mode === 'bulk' ? '' : 'none';
       individualModeDiv.style.display = mode === 'individual' ? '' : 'none';
 
-      /* Sync data between modes */
       if (mode === 'individual') {
-        // Parse bulk text into individual fields
         const { title, points } = parseBulkText(bulkTextarea.value);
         if (title) titleInput.value = title;
         if (points.length > 0) {
@@ -888,7 +876,6 @@
           });
         }
       } else {
-        // Combine individual fields into bulk text
         const title = titleInput.value.trim();
         const pts = getIndividualPoints();
         if (title || pts.length > 0) {
@@ -913,7 +900,7 @@
     function updateGridInfo() {
       const n = Math.max(1, parseInt(tilesInput.value) || 6);
       const { cols, rows } = computeGrid(n);
-      gridInfo.textContent = `Grid: ${cols} × ${rows} = ${cols * rows} tiles`;
+      gridInfo.textContent = `${cols} × ${rows}`;
     }
 
     /* ============================================================
@@ -965,7 +952,6 @@
       }
     });
 
-    /* Allow Enter key to add a new point */
     pointsList.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && e.target.matches('input[name="point"]')) {
         e.preventDefault();
@@ -1008,8 +994,6 @@
       }
       return getIndividualPoints();
     }
-
-
 
     /* Update grid info on settings change */
     tilesInput.addEventListener('input', updateGridInfo);
@@ -1071,11 +1055,9 @@
       try {
         const blob = await fetchPdf(payload);
 
-        /* Clean up previous object URL */
         if (currentPdfUrl) URL.revokeObjectURL(currentPdfUrl);
         currentPdfUrl = URL.createObjectURL(blob);
 
-        /* Replace placeholder with embedded PDF */
         pdfPlaceholder.style.display = 'none';
         let embed = pdfContainer.querySelector('.pdf-preview-embed');
         if (!embed) {
@@ -1087,10 +1069,8 @@
         embed.src = currentPdfUrl;
         pdfContainer.classList.add('has-pdf');
 
-        /* Scroll to preview */
         pdfContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        showToast('Preview generated! ✓', 'success');
+        showToast('Preview generated', 'success');
       } catch (err) {
         showToast(err.message, 'error');
       } finally {
@@ -1118,7 +1098,7 @@
         a.remove();
         URL.revokeObjectURL(url);
 
-        showToast('PDF downloaded successfully! ✓', 'success');
+        showToast('PDF downloaded', 'success');
       } catch (err) {
         showToast(err.message, 'error');
       } finally {
@@ -1137,7 +1117,7 @@
       clearTimeout(toastTimer);
       requestAnimationFrame(() => {
         toastEl.classList.add('visible');
-        toastTimer = setTimeout(() => toastEl.classList.remove('visible'), 3500);
+        toastTimer = setTimeout(() => toastEl.classList.remove('visible'), 3000);
       });
     }
   </script>
